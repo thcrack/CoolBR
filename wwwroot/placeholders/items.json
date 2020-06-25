@@ -1,0 +1,20 @@
+[
+  {
+    "Name": "Blade",
+    "Cost": 750,
+    "Durability": 80,
+    "Class": "Melee"
+  },
+  {
+    "Name": "Pistol",
+    "Cost": 1800,
+    "Durability": 200,
+    "Class": "Firearm"
+  },
+  {
+    "Name": "Flamethrower",
+    "Cost": 2800,
+    "Durability": 100,
+    "Class": "Special"
+  }
+]
