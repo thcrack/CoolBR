@@ -1,26 +1,22 @@
 function Main(p, dataRef, actionRef){
     const data = dataRef.current;
     let containerDiv;
-    let currPos = {x: 0, y: 0};
-    let colors = ['#111d5e', '#c70039', '#f37121', '#ffbd69'];
     p.setup = () => {
         containerDiv = p.select('#target-canvas-container');
         p.createCanvas(containerDiv.size().width, 400);
         p.background(0);
-        p.noStroke();
+        p.stroke(120);
     };
 
     p.draw = () => {
-        currPos.x = p.lerp(currPos.x, data.pos.x, 0.1);
-        currPos.y = p.lerp(currPos.y, data.pos.y, 0.1);
-        p.background(0, 10);
-        let quarterWidth = p.width / 4;
-        for(let i = 0; i < 4; i++){
-            p.fill(colors[i]);
-            p.rect(quarterWidth * i, 0, quarterWidth, p.height);
+        if(data.grid.rows === 0 || data.grid.cols === 0) return;
+        let w = p.width / data.grid.cols, h = p.height / data.grid.rows;
+        for(let i = 0; i < data.grid.rows; i++){
+            for(let j = 0; j < data.grid.cols; j++){
+                p.fill(data.grid.data[i * data.grid.cols + j] === 1 ? '#ffffff' : '#000000');
+                p.rect(w * j, h * i, w, h);
+            }
         }
-        p.fill(255);
-        p.ellipse(currPos.x, currPos.y, 50, 50);
     };
     
     p.windowResized = () => {
@@ -29,12 +25,16 @@ function Main(p, dataRef, actionRef){
     }
     
     p.mouseClicked = (e) => {
-        if(p.mouseX < 0 || p.mouseX > p.width
-        || p.mouseY < 0 || p.mouseY > p.height) {
-            p.select('body').style('background-color', '#FFFFFF');
-        }else{
-            p.select('body').style('background-color', colors[Math.floor(p.mouseX * 4 / (p.width + 1))]);
-        }
+        if(isOutsideCanvas(p.mouseX, p.mouseY)) return;
+        let col = Math.floor(p.mouseX / p.width * data.grid.cols);
+        let row = Math.floor(p.mouseY / p.height * data.grid.rows);
+        data.grid.data[row * data.grid.cols + col] ^= 1;
+        actionRef.current.updateGrid(row, col);
+    }
+    
+    const isOutsideCanvas = (x, y) => {
+        return x < 0 || x >= p.width
+            || y < 0 || y >= p.height;
     }
     
     p.keyPressed = (e) => {

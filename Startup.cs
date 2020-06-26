@@ -86,7 +86,8 @@ namespace CoolBR
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-                endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<ChatHub>("/hub/chat");
+                endpoints.MapHub<GameHub>("/hub/game");
             });
 
             app.UseSpa(spa =>

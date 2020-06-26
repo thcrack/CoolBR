@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as p5 from 'p5';
 import Main from '../game/Main'
+import * as SignalR from "@microsoft/signalr";
 
 const useDOMControl = (domFunc) => {
     const domRef = useRef();
@@ -23,36 +24,36 @@ const useDOMControl = (domFunc) => {
 }
 
 function GameCanvas(props){
-    
-    const [testNum, setTestNum] = useState(0);
-    const dataRef = useRef();
+    const [ready, setReady] = useState(false);
+    const dataRef = useRef({
+        grid: {rows: 0, cols: 0, data: []}
+    });
+    const connectionRef = useRef();
     
     useEffect(() => {
-       dataRef.current = data; 
+        const populateGrid = async () => {
+            const response = await fetch('game');
+            dataRef.current.grid = await response.json();
+        }
+        populateGrid();
+        connectionRef.current = new SignalR.HubConnectionBuilder()
+           .withUrl("/hub/game").build();
+        connectionRef.current.on("GridChanged",
+            (row, col, id) => {
+                dataRef.current.grid.data[row * dataRef.current.grid.cols + col] = id;
+            });
+        connectionRef.current.start();
     });
     
-    let scale = 1;
-    
+    // Can be used to provide p5.js APIs to callback
     const actionRef = useRef({
-        testNum: (x, y) =>
-            {
-                setTestNum(x * y);
-            },
-        alert: () => alert(" ")
+        updateGrid: async (row, col) => {
+            await fetch('game/set?row=' + row + '&col=' + col);
+        }
     });
-
-    let data = {
-        pos: {'x': 150, 'y': 60}
-    };
 
     const p5Function = (p5Ref) => {
         return new p5(p => Main(p, dataRef, actionRef), p5Ref);
-    }
-
-    const randomizePosition = function () {
-        data.pos = {'x': Math.random() * 800, 'y': Math.random() * 400};
-        dataRef.current.pos = data.pos;
-        scale = Math.random() * 100;
     }
     
     return (
@@ -60,10 +61,6 @@ function GameCanvas(props){
             <div className="target-canvas">
                 {useDOMControl(p5Function)}
             </div>
-            <button className="btn btn-primary" onClick={randomizePosition}>
-                Randomize
-            </button>
-            <p>{testNum}</p>
         </div>
     );
 }

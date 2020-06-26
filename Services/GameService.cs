@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Timer = System.Timers.Timer;
+using CoolBR.Game;
 
 namespace CoolBR.Services
 {
@@ -12,51 +12,46 @@ namespace CoolBR.Services
         private readonly ILogger<GameService> _logger;
 
         private readonly ReaderWriterLockSlim _counterLock = new ReaderWriterLockSlim();
-        private int _counter = 0;
-        private Timer _countTimer;
+
+        private BRGame _brGame;
         
         public GameService(ILogger<GameService> logger)
         {
             _logger = logger;
+            _brGame = BRGame.CreateGame();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("Game service begin working");
-            stoppingToken.Register(() =>
-            {
-                _countTimer?.Stop();
-                _countTimer?.Close();
-            });
+            
+            stoppingToken.Register(OnCancellation);
             while (!stoppingToken.IsCancellationRequested) await Task.Yield();
-            _logger.LogDebug("Game service is cancelled");
         }
 
-        public void StartTimer()
+        private void OnCancellation()
         {
-            _countTimer?.Stop();
-            _countTimer?.Close();
-            _countTimer = new Timer(200)
-            {
-                AutoReset = true
-            };
-            
-            _countTimer.Elapsed += (context, e) =>
-            {
-                _counterLock.EnterWriteLock();
-                _counter++;
-                _counterLock.ExitWriteLock();
-            };
-            
-            _countTimer.Start();
+            _logger.LogInformation("Game service cancelled");
         }
 
-        public int GetCount()
+        public void SubscribeToGridChange(EventHandler<BRGame.GridChangedArgs> handler)
         {
-            _counterLock.EnterReadLock();
-            var retVal = _counter;
-            _counterLock.ExitReadLock();
-            return retVal;
+            _brGame.GridChanged += handler;
+        }
+
+        public void SetGrid(int row, int col)
+        {
+            _brGame?.SetGrid(row, col);
+        }
+
+        public int[] GetGrid()
+        {
+            return _brGame?.GetGrid();
+        }
+
+        public int[] GetGridDimensions()
+        {
+            return _brGame?.GetGridDimensions();
         }
     }
 }

@@ -15,11 +15,12 @@ export class Chatroom extends Component {
     }
     
     componentDidMount() {
-        this.connection = new SignalR.HubConnectionBuilder().withUrl("/chathub").build();
-        this.connection.on("ReceiveMessage", (user, message) => {
+        this.connection = new SignalR.HubConnectionBuilder()
+            .withUrl("/hub/chat").build();
+        this.connection.on("ReceiveMessage", 
+            (user, message) => {
             let msgArea = document.getElementById('chatroom-messages');
             let wasAtBottom = msgArea.scrollTop === msgArea.scrollTopMax;
-            console.log(msgArea);
             this.setState({
                 messages: [...this.state.messages, {
                     "user": user,
