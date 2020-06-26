@@ -46,6 +46,10 @@ namespace CoolBR
             
             // Custom services
             services.AddTransient<JsonItemService>();
+            services.AddSingleton<GameService>();
+            services.AddHostedService(
+                    p => p.GetService<GameService>()
+                );
             services.AddSignalR();
 
             // In production, the React files will be served from this directory
