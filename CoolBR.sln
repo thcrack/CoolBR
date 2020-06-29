@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBR", "CoolBR.csproj", "{EA111F7E-25B2-43DB-8C9D-C11CC1414577}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rarakasm.CoolBR.Web", "Rarakasm.CoolBR.Web\Rarakasm.CoolBR.Web.csproj", "{EA111F7E-25B2-43DB-8C9D-C11CC1414577}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rarakasm.CoolBR.Core", "Rarakasm.CoolBR.Core\Rarakasm.CoolBR.Core.csproj", "{68222BDC-56D2-43FD-AE07-25AA6BA4358F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,5 +15,9 @@ Global
 		{EA111F7E-25B2-43DB-8C9D-C11CC1414577}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA111F7E-25B2-43DB-8C9D-C11CC1414577}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EA111F7E-25B2-43DB-8C9D-C11CC1414577}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{68222BDC-56D2-43FD-AE07-25AA6BA4358F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68222BDC-56D2-43FD-AE07-25AA6BA4358F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68222BDC-56D2-43FD-AE07-25AA6BA4358F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68222BDC-56D2-43FD-AE07-25AA6BA4358F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal
