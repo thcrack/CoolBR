@@ -45,8 +45,6 @@
         </Content>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="ClientApp\src\game" />
-      <Folder Include="Core" />
       <Folder Include="wwwroot" />
     </ItemGroup>
     <ItemGroup>

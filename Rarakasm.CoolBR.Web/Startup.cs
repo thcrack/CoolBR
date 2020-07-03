@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Rarakasm.CoolBR.Web.Data;
 using Rarakasm.CoolBR.Web.Models;
@@ -44,10 +46,14 @@ namespace Rarakasm.CoolBR.Web
             // Custom services
             services.AddTransient<JsonItemService>();
             services.AddSingleton<PainterGameService>();
+            services.AddSingleton<CoolBRGameService>();
             services.AddSingleton<ChatHistoryService>();
             services.AddHostedService(
-                    p => p.GetService<PainterGameService>()
-                );
+                p => p.GetService<PainterGameService>()
+            );
+            services.AddHostedService(
+                p => p.GetService<CoolBRGameService>()
+            );
             services.AddSignalR();
 
             // In production, the React files will be served from this directory
@@ -70,6 +76,12 @@ namespace Rarakasm.CoolBR.Web
             }
 
             app.UseHttpsRedirection();
+            // app.UseStaticFiles(new StaticFileOptions
+            // {
+            //     FileProvider = new PhysicalFileProvider(
+            //         Path.Combine(env.ContentRootPath, @"..\GameAssets")),
+            //     RequestPath = "/static/game"
+            // });
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 

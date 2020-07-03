@@ -11,6 +11,7 @@ import { ApplicationPaths } from './components/api-authorization/ApiAuthorizatio
 
 import './custom.css'
 import PainterCanvas from "./components/PainterCanvas";
+import GameCanvas from "./components/GameCanvas";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -20,6 +21,7 @@ export default class App extends Component {
       <Layout>
         <Route exact path='/' component={Home} />
         <Route path='/painter' component={PainterCanvas} />
+        <Route path='/game' component={GameCanvas} />
         <Route path='/counter' component={Counter} />
         <AuthorizeRoute path='/fetch-data' component={FetchData} />
         <Route path='/item-wiki' component={ItemWiki} />

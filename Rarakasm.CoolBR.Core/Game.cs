@@ -1,33 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
+using Rarakasm.CoolBR.Core.System;
+using Rarakasm.CoolBR.Core.System.FieldOfView;
+using Rarakasm.CoolBR.Core.World;
 
 namespace Rarakasm.CoolBR.Core
 {
     public class Game
     {
-        private int _counter = 0;
-        public static Game MakeGame()
+        private Map _map;
+        public static Game MakeGame(string mapPath)
         {
-            return new Game();
+            return new Game(MapLoader.LoadMap(mapPath));
         }
 
-        private Game()
+        private Game(Map map)
         {
-            
+            _map = map;
         }
 
-        public void Add()
+        public IEnumerable<Vector2Grid> GetVisibleGrids(int row, int col, int maxRange)
         {
-            _counter++;
+            return FOVCalculator.CalculateVisibility(_map, row, col, maxRange);
         }
 
-        public int GetCount()
+        public int[] GetMapGidArray()
         {
-            return _counter;
+            return _map.GetGidArray();
         }
 
-        public int GetRandom()
+        public Vector2Grid GetMapDimensions()
         {
-            return new Random().Next();
+            return _map.GetDimensions();
         }
     }
 }
