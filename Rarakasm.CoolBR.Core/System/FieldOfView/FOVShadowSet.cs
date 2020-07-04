@@ -100,7 +100,7 @@ namespace Rarakasm.CoolBR.Core.System.FieldOfView
             }
         }
 
-        public bool IsInShadow(int row, int col, float ratio, out double outResult)
+        public bool IsInShadow(int row, int col, double ratio, out double outResult)
         {
             var shadow = ShadowInterval.FromProjection(row, col);
             outResult = .0;

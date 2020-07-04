@@ -2,9 +2,8 @@ function P5CoolBR(p, dataRef, actionRef){
     const data = dataRef.current;
     const actions = actionRef.current;
     let containerDiv;
-    const colors = ['#000000', '#888888', '#ffffff'];
     let isFocused = false;
-    let gridSize = 32;
+    let gridSize = 64;
     let camSpeedMultiplier = 5;
     let camMoveMargin = .1;
     let renderer;
@@ -79,6 +78,20 @@ function P5CoolBR(p, dataRef, actionRef){
         if(isOutsideCanvas(p.mouseX, p.mouseY)) return;
     }
     
+    p.mouseWheel = (e) => {
+        if(!isFocused) return;
+        //move the square according to the vertical scroll amount
+        let newGridSize = Math.max(16, Math.min(64, gridSize - e.delta));
+        let ratio = newGridSize / gridSize;
+        targetPos.x *= ratio;
+        currPos.x *= ratio;
+        targetPos.y *= ratio;
+        currPos.y *= ratio;
+        gridSize = newGridSize;
+        //uncomment to block page scrolling
+        return false;
+    }
+    
     p.keyPressed = (e) => {
         if(!isFocused) return true;
         let oldR = data.origin.row, oldC = data.origin.col;
@@ -99,7 +112,7 @@ function P5CoolBR(p, dataRef, actionRef){
                 break;
         }
         if(data.origin.row !== oldR || data.origin.col !== oldC){
-            actionRef.current.originMoved();
+            actions.originMoved();
             targetPos = {x: data.origin.col * gridSize, y: data.origin.row * gridSize};
         }
         

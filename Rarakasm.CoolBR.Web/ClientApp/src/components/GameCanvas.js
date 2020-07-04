@@ -36,7 +36,7 @@ function GameCanvas(props){
         const visResponse = await fetch(
             'api/game/visiblegrids?row=' + dataRef.current.origin.row
             + '&col=' + dataRef.current.origin.col
-            + '&maxRange=' + 8
+            + '&maxRange=' + 6
         );
         let visibles = await visResponse.json();
         dataRef.current.visible.fill(0);

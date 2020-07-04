@@ -7,9 +7,11 @@ namespace Rarakasm.CoolBR.Core.System.FieldOfView
 {
     public class FOVCalculator
     {
+        private const double InShadowRatio = .4;
+
         // row * oct[i][0] + col * oct[i][1]
         // row * oct[i][2] + col * oct[i][3]
-        private static readonly int[,] _oct = 
+        private static readonly int[,] Oct = 
         {
             {  1,  0,  0,  1 }, {  0,  1,  1,  0 },
             {  0, -1,  1,  0 }, { -1,  0,  0,  1 },
@@ -47,18 +49,18 @@ namespace Rarakasm.CoolBR.Core.System.FieldOfView
             var rangeSqr = maxRange * maxRange;
             for (var row = 0; row <= maxRange && !fullShadow; row++)
             {
-                var actualRow = startingRow + row * _oct[i, 0];
-                var actualCol = startingCol + row * _oct[i, 2];
+                var actualRow = startingRow + row * Oct[i, 0];
+                var actualCol = startingCol + row * Oct[i, 2];
                 if (!map.IsInBound(actualRow, actualCol)) break;
                 for (var col = 0; col <= row; col++)
                 {
                     if (row * row + col * col >= rangeSqr) continue;
-                    actualRow = startingRow + row * _oct[i, 0] + col * _oct[i, 1];
-                    actualCol = startingCol + row * _oct[i, 2] + col * _oct[i, 3];
+                    actualRow = startingRow + row * Oct[i, 0] + col * Oct[i, 1];
+                    actualCol = startingCol + row * Oct[i, 2] + col * Oct[i, 3];
                     if (!map.IsInBound(actualRow, actualCol)) break;
                     
                     var outRes = .0;
-                    var inShadow = shadows.IsInShadow(row, col, 0.25f, out outRes);
+                    var inShadow = shadows.IsInShadow(row, col, InShadowRatio, out outRes);
                     var visible = table[actualRow, actualCol] != -1 && !inShadow;
 
                     if (outRes < 1 &&
